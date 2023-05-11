@@ -1,6 +1,6 @@
 # Load packages using pacman::p_load
 if (!require("pacman")) install.packages("pacman")
-pacman::p_load("seqinr", "tidyverse")
+pacman::p_load("seqinr", "stringr")
 
 fn = list.files(path = "data_input/new",
                 pattern = "fasta|fa",

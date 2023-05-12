@@ -1,3 +1,7 @@
+#!/usr/bin/env Rscript
+
+rm(list = ls())
+
 # Load packages using pacman::p_load
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load("seqinr", "stringr")
@@ -6,11 +10,28 @@ fn = list.files(path = "data_input/new",
                 pattern = "fasta|fa",
                 full.names = T)
 
+if(length(fn) > 1){
+  print("you can only have 1 file in the data_input/new folder")
+}
+
+if(length(fn) == 0){
+  print("data_input/new folder is empty")
+}
+
+
 fasta_new = read.fasta(fn)
 
 fn = list.files(path = "data_input/old",
                 pattern = "fasta|fa",
                 full.names = T)
+
+if(length(fn) > 1){
+  print("you can only have 1 file in the data_input/old folder")
+}
+
+if(length(fn) == 0){
+  print("data_input/old folder is empty")
+}
 
 fasta_old = read.fasta(fn)
 rm(fn)
@@ -29,7 +50,7 @@ new_match = str_extract(names(fasta_new), pattern)
 index_old = match(new_match, names(fasta_old), nomatch = 0)
 
 #check to see if some items didn't match
-if (0 %in% index) {
+if (0 %in% index_old) {
   print("You have missing IDs in your list.")
 } else {
   print("All IDs are present in your list.")
@@ -44,7 +65,7 @@ index_comb = match(names(fasta_new), names(fasta_comb), nomatch = 0)
 #get names of old, new, and combined name for double check
 old_index = index_old
 comb_index = index_comb
-old_nm = names(fasta_old[index])
+old_nm = names(fasta_old[index_old])
 new_nm = names(fasta_new)
 comb_nm = names(fasta_comb[index_comb])
 

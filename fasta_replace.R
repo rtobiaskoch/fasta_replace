@@ -36,7 +36,7 @@ if (0 %in% index) {
 }
 
 #removes the sequences in the fasta old list and replaces it with the new
-fasta_comb = c(fasta_old[-index_old], fasta_new)
+fasta_comb = c(fasta_new, fasta_old[-index_old])
 
 #get positions of new names in combined file
 index_comb = match(names(fasta_new), names(fasta_comb), nomatch = 0)

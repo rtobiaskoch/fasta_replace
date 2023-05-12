@@ -26,7 +26,7 @@ new_match = str_extract(names(fasta_new), pattern)
 #>#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 #get the location of the sequences in the old list that match to the new list
-index = match(new_match, names(fasta_old), nomatch = 0)
+index_old = match(new_match, names(fasta_old), nomatch = 0)
 
 #check to see if some items didn't match
 if (0 %in% index) {
@@ -35,13 +35,25 @@ if (0 %in% index) {
   print("All IDs are present in your list.")
 }
 
-#create a new fasta list that will get the matching sequences replaced
-fasta_comb = fasta_old
+#removes the sequences in the fasta old list and replaces it with the new
+fasta_comb = c(fasta_old[-index_old], fasta_new)
 
+#get positions of new names in combined file
+index_comb = match(names(fasta_new), names(fasta_comb), nomatch = 0)
 
-#where the sequence ID's matched replace the sequence
-for(i in seq_along(fasta_new)){
-  fasta_comb[[index[i]]] = fasta_new[[i]]
+#get names of old, new, and combined name for double check
+old_index = index_old
+comb_index = index_comb
+old_nm = names(fasta_old[index])
+new_nm = names(fasta_new)
+comb_nm = names(fasta_comb[index_comb])
+
+name_check = data.frame(old_index, comb_index, old_nm, new_nm, comb_nm)
+
+write.csv(name_check, "data_output/name_switch_report.csv")
+
+if(!identical(new_nm, comb_nm)){
+  print("the combined fasta name doesn't match the new names")
 }
 
 write.fasta(sequences = fasta_comb,
